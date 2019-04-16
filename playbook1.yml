@@ -1,0 +1,14 @@
+---
+- name: "Play 1: Show running ASA version"
+  hosts: "asa-firewalls"
+  gather_facts: false
+  tasks: 
+
+    - name: "Tasks 1: Show running-config"
+      asa_command: 
+        commands:
+          - show running-config
+      register: config
+    - debug:
+        var: config.stdout_lines
+...
