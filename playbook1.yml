@@ -1,14 +1,27 @@
 ---
-- name: "Play 1: Show running ASA version"
+- name: "Play 1: Add IP to Object-Group"
   hosts: "asa-firewalls"
   gather_facts: false
   tasks: 
+    
+    - name: "Task 1: Check if object-group exists"
 
-    - name: "Tasks 1: Show running-config"
-      asa_command: 
+
+
+    - name: "Tasks 1: Add hosts to object-group"
+      asa_config: 
+        lines:
+          - network-object host 155.201.35.200
+          - network-object host 155.201.35.201
+          - network-object host 155.201.35.202
+          - network-object host 155.201.35.203
+        parents: ['object-group network csg-ftp1']
+
+    - name: "Task 2: Print oject-group"
+      asa_command:
         commands:
-          - show running-config
-      register: config
-    - debug:
-        var: config.stdout_lines
+          - show object-group network
+      register: output
+    
+    - debug: var=output.stdout_lines
 ...
