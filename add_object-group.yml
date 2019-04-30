@@ -1,23 +1,11 @@
 ---
-- name: "Play 1: Update object-group"
-  hosts: "asa-firewalls"
-  gather_facts: false
-  tasks: 
-
-    - name: "Tasks 1: Add hosts to object-group"
-      asa_config: 
-        lines:
-          - network-object host 155.201.35.200
-          - network-object host 155.201.35.201
-          - network-object host 155.201.35.202
-          - network-object host 155.201.35.203
-        parents: ['object-group network csg-ftp1']
-
-    - name: "Task 2: Print oject-group"
+- name: "Play 1: Update object-group csg-ftp1_customers sftp"
+  hosts: ecom-firewalls
+  tasks:
+    - name: "Task 1: Save running-config"
       asa_command:
-        commands:
-          - show object-group network
-      register: output
-    
-    - debug: var=output.stdout_lines
+        - show running-config
+      register: config_output
+    - debug:
+        var: config_output.stdout_lines
 ...

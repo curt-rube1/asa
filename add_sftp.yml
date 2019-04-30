@@ -1,0 +1,25 @@
+---
+- name: "PLAY 1: Update object-group csg-ftp1_customers sftp"
+  hosts: ecom-firewalls
+  gather_facts: false
+  tasks:
+    - name: "TASK 1: Show firewall running-config"
+      asa_command:
+        commands:
+        - show running-config
+      register: output
+    - name: "TASK 2: Write running-config to file"
+      local_action: "copy content='{{ output.stdout_lines }}' dest=output/config.txt" 
+    - name: "TASK 3: Add host address to object-group ftp1"
+      asa_config:
+        lines:
+          - network-object host 1.1.1.4
+        parents: ['object-group network ftp1']
+    - name: "TASK 4: Show updated object-group"
+      asa_command:
+        commands:
+          - show object-group id ftp1
+      register: ios_output
+    - debug:
+        var: ios_output.stdout_lines
+...
